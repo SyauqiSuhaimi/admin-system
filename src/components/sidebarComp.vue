@@ -1,19 +1,27 @@
 <template>
-    <div class="flex"
-        :class="['bg-primary text-primary-content transition-all duration-300', this.setting.setSidebar ? 'w-64' : 'w-16']">
-        <div class="flex flex-col items-center">
-            <ul class="mt-4 w-full">
-                <li class="group" v-for="item in menuItems" :key="item.name">
-                    <a :href="item.url"
-                        class="flex items-center p-4 w-full text-left focus:outline-none group-hover:bg-gray-200">
-                        <span class="material-icons">{{ item.icon }}</span>
-                        <span v-if="this.setting.setSidebar" class="ml-3">{{ item.name }}</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <div class="inline-grid rounded-xl "
+        :class="['items-center bg-primary text-primary-content transition-all duration-300']">
+        <ul>
+            <li class="group">
+                <a class="flex items-center p-4 text-center hover:bg-purple-500 rounded-xl"
+                    @click="this.setting.openSidebar()">
+                    <span class="material-symbols-outlined cursor-pointer hover:text-neutral">
+                        menu
+                    </span>
+                </a>
+            </li>
+            <li class="group" v-for="item in menuItems" :key="item.name">
+                <a :href="item.url" class="flex items-center p-4 text-center group-hover:bg-purple-500 rounded-xl">
+                    <span class="material-symbols-outlined cursor-pointer hover:text-neutral">
+                        {{ item.icon }}
+                    </span>
+                    <span v-if="this.setting.setSidebar" class="ml-3">{{ item.name }}</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </template>
+
 <script>
 import { webSettings } from '@/stores/webSettings';
 
