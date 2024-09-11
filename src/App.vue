@@ -7,9 +7,15 @@ import sidebarComp from './components/sidebarComp.vue';
 
 <template>
   <headerComp></headerComp>
-  <sidebarComp></sidebarComp>
+  <div class="flex flex-row">
+    <sidebarComp class=""></sidebarComp>
+    <div class="p-5">
+      <RouterView />
+    </div>
+  </div>
 
-  <RouterView />
+
+
 </template>
 
-<style scoped></style>
+<style></style>

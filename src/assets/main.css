@@ -2,3 +2,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root:has(.modal-open, .modal:target, .modal-toggle:checked + .modal, .modal[open]) {
+    overflow: hidden;
+    scrollbar-gutter: auto; /* Change from stable to auto */
+  }
