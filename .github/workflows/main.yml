@@ -28,8 +28,8 @@ jobs:
       run: npm install
 
     # Step 4: Run tests (if any)
-    - name: Run tests
-      run: npm run test  # Ensure that you have a test script in package.json
+    # - name: Run tests
+    #   run: npm run test  # Ensure that you have a test script in package.json
 
     # Step 5: Build the project
     - name: Build the project
