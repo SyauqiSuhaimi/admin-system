@@ -11,10 +11,11 @@
           </th>
           <th>Name </th>
           <th>Email</th>
-          <th>Job</th>
+          <th>Gender</th>
+          <th>Tech Stack</th>
           <th>Status</th>
           <th class="text-center"><span class="material-symbols-outlined cursor-pointer hover:text-neutral"
-              onclick="my_modal_3.showModal()">
+              @click="openModal()">
               add
             </span></th>
         </tr>
@@ -43,13 +44,24 @@
             {{ item.email }}
           </td>
           <td>
-            {{ item.job.company }}
-            <br />
-            <span class="badge badge-ghost badge-sm">{{ item.job.company }}</span>
+            <span v-if="item.gender" class="material-symbols-outlined text-blue-500 cursor-pointer">
+              man
+            </span>
+            <span v-else class="material-symbols-outlined text-pink-500 cursor-pointer">
+              woman
+            </span>
           </td>
-          <td>{{ item.favorite_color }}</td>
+          <td>
+            <span v-for="(pl, index) in item.stack" :key="index" class="badge badge-ghost badge-sm mr-2">{{ pl
+              }}</span>
+          </td>
+          <td>
+            <input v-if="item.status != 'unverified'" type="checkbox" class="toggle toggle-primary" checked="checked"
+              v-model="item.status" />
+            <span v-else>{{ item.status }}</span>
+          </td>
           <th class="grid grid-cols-2 gap-2">
-            <span class="material-symbols-outlined text-yellow-500 cursor-pointer" onclick="my_modal_3.showModal()">
+            <span class="material-symbols-outlined text-yellow-500 cursor-pointer" @click="openModal(index)">
               edit
             </span>
             <span class="material-symbols-outlined text-red-800 cursor-pointer">
@@ -73,24 +85,29 @@
             </div>
           </div>
           <label class="input input-bordered flex items-center gap-2">
-            <input type="text" class="grow" placeholder="Enter Name" />
+            <span class="material-symbols-outlined text-xl">
+              person
+            </span>
+            <input type="text" class="grow" placeholder="Enter Name" v-model="currentItem.name" />
           </label>
           <label class="input input-bordered flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4 opacity-70">
-              <path
-                d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-              <path
-                d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-            </svg>
-            <input type="text" class="grow" placeholder="Email" />
+            <span class="material-symbols-outlined text-xl">
+              mail
+            </span>
+            <input type="text" class="grow" placeholder="Email" v-model="currentItem.email" />
           </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4 opacity-70">
-              <path
-                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-            </svg>
-            <input type="text" class="grow" placeholder="Username" />
-          </label>
+          <div class="form-control">
+            <label class="label cursor-pointer py-1">
+              <span class="label-text">Male</span>
+              <input type="radio" name="radio-10" class="radio checked:bg-blue-500" value="true"
+                v-model="currentItem.gender" />
+            </label>
+            <label class="label cursor-pointer py-1">
+              <span class="label-text">Female</span>
+              <input type="radio" name="radio-10" class="radio checked:bg-pink-500" value="false"
+                v-model="currentItem.gender" />
+            </label>
+          </div>
           <label class="input input-bordered flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4 opacity-70">
               <path fill-rule="evenodd"
@@ -107,6 +124,7 @@
   </div>
 </template>
 <script>
+import { cloneDeep } from 'lodash';
 export default {
   data() {
     return {
@@ -120,12 +138,14 @@ export default {
             "avatar": "https://img.daisyui.com/images/profile/demo/2@94.webp"
           },
           "email": "hart.hagerty@example.com",
+          "gender": true,
           "job": {
             "company": "Zemlak, Daniel and Leannon",
             "position": "Desktop Support Technician"
           },
           "favorite_color": "Purple",
-          "status": "active",
+          "status": true,
+          "stack": ["JavaScript", "Python", "HTML", "CSS"],
           "details": "details"
         },
         {
@@ -136,12 +156,14 @@ export default {
             "avatar": "https://img.daisyui.com/images/profile/demo/3@94.webp"
           },
           "email": "brice.swyre@example.com",
+          "gender": true,
           "job": {
             "company": "Carroll Group",
             "position": "Tax Accountant"
           },
           "favorite_color": "Red",
-          "status": "inactive",
+          "status": false,
+          "stack": ["Python", "SQL"],
           "details": "details"
         },
         {
@@ -152,12 +174,14 @@ export default {
             "avatar": "https://img.daisyui.com/images/profile/demo/4@94.webp"
           },
           "email": "marjy.ferencz@example.com",
+          "gender": false,
           "job": {
             "company": "Rowe-Schoen",
             "position": "Office Assistant I"
           },
           "favorite_color": "Crimson",
           "status": "unverified",
+          "stack": ["Ruby", "PHP"],
           "details": "details"
         },
         {
@@ -168,17 +192,46 @@ export default {
             "avatar": "https://img.daisyui.com/images/profile/demo/5@94.webp"
           },
           "email": "yancy.tear@example.com",
+          "gender": false,
           "job": {
             "company": "Wyman-Ledner",
             "position": "Community Outreach Specialist"
           },
           "favorite_color": "Indigo",
-          "status": "active",
+          "status": true,
+          "stack": ["JavaScript", "C#", "HTML"],
           "details": "details"
         }
-      ]
+      ],
+      currentItem: {
+        name: null,
+        email: null,
+        gender: 'male',
+        stack: [],
+        status: 'unverified',
+      },
+      resetItem: {
+        name: null,
+        email: null,
+        gender: 'male',
+        stack: [],
+        status: 'unverified',
+      }
     }
 
+  },
+  methods: {
+    openModal(item) {
+      console.log("this.currentItem", this.currentItem)
+      console.log("this.userList", this.userList)
+      if (item > 0) {
+        this.currentItem = cloneDeep(this.userList[item])
+      } else {
+        this.currentItem = this.resetItem
+      }
+      console.log("this.currentItem", this.currentItem)
+      my_modal_3.showModal()
+    }
   }
 
 }
