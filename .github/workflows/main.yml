@@ -1,4 +1,4 @@
-name: Vue.js CI
+name: Vite.js CI and Deploy to GitHub Pages
 
 on:
   push:
@@ -21,24 +21,19 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'  # You can specify your Node.js version here
+        node-version: '18'  # Specify your Node.js version
 
     # Step 3: Install dependencies
     - name: Install dependencies
       run: npm install
 
-    # Step 4: Run tests (if any)
-    # - name: Run tests
-    #   run: npm run test  # Ensure that you have a test script in package.json
-
-    # Step 5: Build the project
+    # Step 4: Build the project
     - name: Build the project
-      run: npm run build  # Ensure that you have a build script in package.json
+      run: npm run build
 
-    # Step 6: Upload build artifacts (optional, only if you want to save the build results)
-    - name: Upload production build
-      uses: actions/upload-artifact@v3
+    # Step 5: Deploy to GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        name: production-build
-        path: dist  # Change the path to match where your build files are located
-
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
