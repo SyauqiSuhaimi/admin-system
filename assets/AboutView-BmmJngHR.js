@@ -1,1 +1,0 @@
-import{_ as e,c as o,o as t,a as s}from"./index-BvF9O2_-.js";const c={},n={class:"about"},a=s("h1",{class:"text-3xl font-bold underline"}," Hello world! ",-1),_=[a];function r(l,d){return t(),o("div",n,_)}const f=e(c,[["render",r]]);export{f as default};
