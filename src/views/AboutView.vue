@@ -1,8 +1,8 @@
 <template>
   <div class="about">
-    <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+    <Vueform>
+      <TextElement name="hello_world" label="Hello" placeholder="World" />
+    </Vueform>
   </div>
 </template>
 

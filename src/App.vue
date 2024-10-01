@@ -12,8 +12,8 @@ import sidebarComp from './components/sidebarComp.vue';
       <sidebarComp class=""></sidebarComp>
     </div>
 
-    <div class="w-full p-5 pl-2">
-      <div class="bg-white rounded-xl">
+    <div class="w-full p-5 pl-2 overflow-x-auto">
+      <div class="bg-white">
         <RouterView />
       </div>
     </div>

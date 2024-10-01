@@ -3,11 +3,14 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
+    './vueform.config.js', // or where `vueform.config.js` is located. Change `.js` to `.ts` if required.
+    './node_modules/@vueform/vueform/themes/tailwind/**/*.vue',
+    './node_modules/@vueform/vueform/themes/tailwind/**/*.js',
   ],
   theme: {
     extend: {},
   },
-  plugins: [require('daisyui'),]
+  plugins: [require('daisyui'),require('@vueform/vueform/tailwind'),]
   ,
   daisyui: {
     themes: false, // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]

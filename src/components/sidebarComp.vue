@@ -1,10 +1,10 @@
 <template>
-    <div class="inline-grid rounded-xl "
+    <div class="inline-grid rounded-xl"
         :class="['items-center bg-primary text-primary-content transition-all duration-300']">
         <ul>
             <li class="group">
-                <a class="flex items-center p-4 text-center hover:bg-purple-500 rounded-xl"
-                    @click="this.setting.openSidebar()">
+                <a v-if="!isMobile" class="flex items-center p-4 text-center hover:bg-purple-500 rounded-xl"
+                    @click="setting.openSidebar()">
                     <span class="material-symbols-outlined cursor-pointer hover:text-neutral">
                         menu
                     </span>
@@ -15,7 +15,7 @@
                     <span class="material-symbols-outlined cursor-pointer hover:text-neutral">
                         {{ item.icon }}
                     </span>
-                    <span v-if="this.setting.setSidebar" class="ml-3">{{ item.name }}</span>
+                    <span v-if="!isMobile && setting.setSidebar" class="ml-3">{{ item.name }}</span>
                 </a>
             </li>
         </ul>
@@ -23,27 +23,37 @@
 </template>
 
 <script>
+import { ref, onMounted, onUnmounted } from 'vue';
 import { webSettings } from '@/stores/webSettings';
 
 export default {
     setup() {
-        const setting = webSettings()
-        return { setting };
+        const setting = webSettings();
+        const isMobile = ref(false);
+
+        const checkScreenSize = () => {
+            isMobile.value = window.matchMedia('(max-width: 768px)').matches;
+        };
+
+        onMounted(() => {
+            checkScreenSize();
+            window.addEventListener('resize', checkScreenSize);
+        });
+
+        onUnmounted(() => {
+            window.removeEventListener('resize', checkScreenSize);
+        });
+
+        return { setting, isMobile };
     },
     data() {
         return {
-            isExpanded: webSettings.setSidebar,
             menuItems: [
                 { name: 'Dashboard', icon: 'dashboard', url: '/' },
                 { name: 'User', icon: 'person', url: '/about' },
                 { name: 'Component', icon: 'widgets', url: '/about' }
             ]
         };
-    },
-    methods: {
-        toggleSidebar() {
-            this.isExpanded = !this.isExpanded;
-        }
     }
 };
 </script>

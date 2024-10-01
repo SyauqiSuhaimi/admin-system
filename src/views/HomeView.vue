@@ -31,12 +31,12 @@
             <div class="flex items-center gap-3">
               <div class="avatar">
                 <div class="mask mask-squircle h-12 w-12">
-                  <img :src="item.name.avatar" alt="Avatar Tailwind CSS Component" />
+                  <img :src="item.profile.avatar" alt="Avatar Tailwind CSS Component" />
                 </div>
               </div>
               <div>
-                <div class="font-bold">{{ item.name.full_name }}</div>
-                <div class="text-sm opacity-50">{{ item.name.location }}</div>
+                <div class="font-bold">{{ item.profile.full_name }}</div>
+                <div class="text-sm opacity-50">{{ item.profile.location }}</div>
               </div>
             </div>
           </td>
@@ -60,11 +60,11 @@
               v-model="item.status" />
             <span v-else>{{ item.status }}</span>
           </td>
-          <th class="grid grid-cols-2 gap-2">
-            <span class="material-symbols-outlined text-yellow-500 cursor-pointer" @click="openModal(index)">
+          <th class="grid grid-cols-2 gap-2" style="width: 100px !important;">
+            <span class="material-symbols-outlined cursor-pointer text-yellow-500" @click="openModal(item)">
               edit
             </span>
-            <span class="material-symbols-outlined text-red-800 cursor-pointer">
+            <span class="material-symbols-outlined cursor-pointer text-red-800" @click="deleteItem(index)">
               delete
             </span>
           </th>
@@ -88,14 +88,16 @@
             <span class="material-symbols-outlined text-xl">
               person
             </span>
-            <input type="text" class="grow" placeholder="Enter Name" v-model="currentItem.name" />
+            <input type="text" class="grow" placeholder="Enter Name" v-model="currentItem.profile.full_name" />
           </label>
-          <label class="input input-bordered flex items-center gap-2">
+          <Multiselect v-model="currentItem.stack" :options="options" class="w-full" mode="tags"
+            :close-on-select="false" :searchable="true" :create-option="true" />
+          <!-- <label class="input input-bordered flex items-center gap-2">
             <span class="material-symbols-outlined text-xl">
               mail
             </span>
             <input type="text" class="grow" placeholder="Email" v-model="currentItem.email" />
-          </label>
+          </label> -->
           <div class="form-control">
             <label class="label cursor-pointer py-1">
               <span class="label-text">Male</span>
@@ -108,15 +110,7 @@
                 v-model="currentItem.gender" />
             </label>
           </div>
-          <label class="input input-bordered flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4 opacity-70">
-              <path fill-rule="evenodd"
-                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                clip-rule="evenodd" />
-            </svg>
-            <input type="password" class="grow" value="password" />
-          </label>
-          <button class="btn">Submit</button>
+          <button class="btn" @click="updateItem()">Submit</button>
           <button class="btn">Cancel</button>
         </form>
       </div>
@@ -124,15 +118,30 @@
   </div>
 </template>
 <script>
+import Multiselect from '@vueform/multiselect'
+
 import { cloneDeep } from 'lodash';
 export default {
+  components: {
+    Multiselect,
+  },
   data() {
     return {
-
+      options: [
+        'JavaScript',
+        'Python',
+        'Ruby',
+        'PHP',
+        'HTML',
+        'CSS',
+        'SQL',
+        'C#',
+      ],
+      isAdd: false,
       userList: [
         {
           "selected": false,
-          "name": {
+          "profile": {
             "full_name": "Hart Hagerty",
             "location": "United States",
             "avatar": "https://img.daisyui.com/images/profile/demo/2@94.webp"
@@ -150,7 +159,7 @@ export default {
         },
         {
           "selected": false,
-          "name": {
+          "profile": {
             "full_name": "Brice Swyre",
             "location": "China",
             "avatar": "https://img.daisyui.com/images/profile/demo/3@94.webp"
@@ -168,7 +177,7 @@ export default {
         },
         {
           "selected": false,
-          "name": {
+          "profile": {
             "full_name": "Marjy Ferencz",
             "location": "Russia",
             "avatar": "https://img.daisyui.com/images/profile/demo/4@94.webp"
@@ -186,7 +195,7 @@ export default {
         },
         {
           "selected": false,
-          "name": {
+          "profile": {
             "full_name": "Yancy Tear",
             "location": "Brazil",
             "avatar": "https://img.daisyui.com/images/profile/demo/5@94.webp"
@@ -204,38 +213,59 @@ export default {
         }
       ],
       currentItem: {
-        name: null,
-        email: null,
-        gender: 'male',
+        profile: {
+          full_name: "",
+          location: "",
+          avatar: ""
+        },
+        email: "",
+        gender: true,
         stack: [],
-        status: 'unverified',
+        status: "unverified",
       },
       resetItem: {
-        name: null,
-        email: null,
-        gender: 'male',
+        profile: {
+          full_name: "",
+          location: "",
+          avatar: ""
+        },
+        email: "",
+        gender: true,
         stack: [],
-        status: 'unverified',
+        status: "unverified",
       }
     }
 
   },
   methods: {
     openModal(item) {
-      console.log("this.currentItem", this.currentItem)
-      console.log("this.userList", this.userList)
-      if (item > 0) {
-        this.currentItem = cloneDeep(this.userList[item])
+      if (item) {
+        this.currentItem = cloneDeep(item)
+        this.isAdd = false
       } else {
         this.currentItem = this.resetItem
+        this.isAdd = true
       }
-      console.log("this.currentItem", this.currentItem)
       my_modal_3.showModal()
+    },
+    deleteItem(index) {
+      this.userList.splice(index, 1)
+    },
+    updateItem() {
+      if (this.isAdd) {
+        this.userList.push(this.currentItem)
+      } else {
+        const index = this.userList.findIndex((item) => item.email === this.currentItem.email)
+        this.userList.splice(index, 1, this.currentItem)
+      }
     }
-  }
+  },
+
 
 }
 </script>
 <style lang="">
 
 </style>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
