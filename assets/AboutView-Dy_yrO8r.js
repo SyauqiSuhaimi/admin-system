@@ -1,1 +1,0 @@
-import{_ as c,c as l,a as e,w as a,r as o,o as r}from"./index-BcA29LaX.js";const s={},_={class:"about"};function m(d,f){const t=o("TextElement"),n=o("Vueform");return r(),l("div",_,[e(n,null,{default:a(()=>[e(t,{name:"hello_world",label:"Hello",placeholder:"World"})]),_:1})])}const p=c(s,[["render",m]]);export{p as default};
