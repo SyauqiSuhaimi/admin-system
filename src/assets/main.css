@@ -7,3 +7,7 @@
     overflow: hidden;
     scrollbar-gutter: auto; /* Change from stable to auto */
   }
+    html {
+      --tw-bg-opacity: 1;
+      background-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity))) !important;
+    }

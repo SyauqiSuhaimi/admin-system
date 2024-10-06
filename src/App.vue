@@ -13,9 +13,7 @@ import sidebarComp from './components/sidebarComp.vue';
     </div>
 
     <div class="w-full p-5 pl-2 overflow-x-auto">
-      <div class="bg-white">
-        <RouterView />
-      </div>
+      <RouterView />
     </div>
   </div>
 
