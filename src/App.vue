@@ -8,7 +8,7 @@ import sidebarComp from './components/sidebarComp.vue';
 <template>
   <headerComp></headerComp>
   <div class="flex flex-grow">
-    <div class=" p-5 pr-3">
+    <div class=" p-5 pr-3 pt-8">
       <sidebarComp class=""></sidebarComp>
     </div>
 
