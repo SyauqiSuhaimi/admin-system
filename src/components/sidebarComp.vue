@@ -50,7 +50,7 @@ export default {
         return {
             menuItems: [
                 { name: 'Dashboard', icon: 'dashboard', url: '/', routename: 'home' },
-                { name: 'Component', icon: 'widgets', url: '/about', routename: 'about' },
+                { name: 'Table', icon: 'table_chart', url: '/about', routename: 'about' },
             ]
         };
     }

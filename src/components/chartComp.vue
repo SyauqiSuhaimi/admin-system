@@ -5,6 +5,7 @@
 import * as echarts from 'echarts';
 import { webSettings } from '@/stores/webSettings';
 export default {
+    name: 'chartComp',
     setup() {
         const setting = webSettings();
         return { setting };
@@ -12,7 +13,6 @@ export default {
     methods: {
         initChart() {
             const chartDom = document.getElementById('line-chart');
-            this.chart = echarts.init(chartDom);
             const option = {
                 title: {
                     text: 'Sales Overview (Last 7 days)',
@@ -38,15 +38,24 @@ export default {
                     },
                 ],
             };
-            this.chart.setOption(option);
+
+            if (this.chart) {
+                this.onResize()
+            } else {
+                this.chart = echarts.init(chartDom);
+                this.chart.setOption(option);
+            }
+        },
+        onResize() {
+            if (this.chart) {
+                this.chart.resize();
+            }
         },
     },
     watch: {
         'setting.isGridStackReady': function (newVal) {
-            console.log("setting.isGridStackReady", newVal);
             if (newVal) {
                 this.initChart();
-                this.setting.setGridStackReady(false);
             }
         }
     },
