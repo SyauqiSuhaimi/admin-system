@@ -4,7 +4,7 @@
         <div class="navbar-start">
         </div>
         <div class="navbar-center">
-          <a class="btn btn-ghost text-xl">daisyUI</a>
+          <a class="btn btn-ghost text-xl">Admin System</a>
         </div>
         <div class="navbar-end">
           <label class="grid cursor-pointer place-items-center">
@@ -72,6 +72,11 @@
               <span class="badge badge-xs badge-primary indicator-item"></span>
             </div>
           </button>
+          <div class="avatar mx-2">
+            <div class="ring-primary ring-offset-base-100 w-6 rounded-full ring ring-offset-2">
+              <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -21,6 +21,7 @@
 </template>
 <script>
 export default {
+    name: 'statComp',
     props: {
         title: {
             type: String,

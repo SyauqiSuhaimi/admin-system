@@ -1,11 +1,14 @@
 <template>
-  <div><button class="btn" @click="editGridItem">Edit</button></div>
+  <!-- <div><button class="btn" @click="editGridItem">Edit</button></div> -->
   <div>
     <div class="grid-stack">
-      <div v-for="(item, index) in gridItems" :key="index" class="grid-stack-item" style="padding: 0.5rem!important;"
-        :gs-w="item.width" :gs-h="item.height" :gs-no-move="!editGrid" :gs-no-resize="!editGrid">
+
+      <div v-for="(item, index) in gridItems" :key="index" class="grid-stack-item" :class="`box${index}`"
+        style="padding: 0.5rem!important;" :gs-w="item.width" :gs-h="item.height" :gs-no-move="!editGrid"
+        :gs-no-resize="!editGrid">
+        <ResizeObserver :target="`.box${index}`" :index="index" :callback="handleResize"></ResizeObserver>
         <div v-if="editGrid" class="card bg-base-100 h-full p-4 overflow-auto">
-          <component :is="item.component" v-bind="item.props"></component>
+          <component :is="item.component" v-bind="item.props" :ref="`refItem${index}`"></component>
         </div>
         <div v-else class="card bg-base-100 h-full p-5 overflow-auto flex-row flex items-center justify-center">
 
@@ -14,9 +17,9 @@
             <option disabled selected>Select Widget</option>
             <option v-for="(value, key) in widgetList" :key="key" :value="key">{{ key }}</option>
           </select>
-          <span class="material-symbols-outlined cursor-pointer text-red-800 text-4xl">
+          <!-- <span class="material-symbols-outlined cursor-pointer text-red-800 text-4xl">
             delete
-          </span>
+          </span> -->
         </div>
       </div>
     </div>
@@ -30,7 +33,7 @@ import statComp from '@/components/statComp.vue';
 import 'gridstack/dist/gridstack.min.css';
 import { GridStack } from 'gridstack';
 import { webSettings } from '@/stores/webSettings';
-
+import ResizeObserver from '@/components/resizeOberver.vue';
 export default {
   setup() {
     const setting = webSettings();
@@ -38,7 +41,7 @@ export default {
     return { setting };
   },
   components: {
-    tableComp, chartComp, statComp
+    tableComp, chartComp, statComp, ResizeObserver
   },
   data() {
     return {
@@ -66,6 +69,17 @@ export default {
 
   },
   methods: {
+    handleResize({ width, height }, index) {
+      const componentInstance = this.$refs[`refItem${index}`];
+      console.log("componentInstance", componentInstance[0]);
+      if (componentInstance && componentInstance[0].initChart) {
+        componentInstance[0].initChart();
+        console.log("initChart");
+      } else {
+        console.log("Component not found");
+      }
+    },
+
     updateComponent(event, index) {
       const selectedComponentKey = event.target.value;
       const selectedComponent = this.widgetList[selectedComponentKey];

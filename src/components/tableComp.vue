@@ -1,7 +1,21 @@
 <template class="overflow-x-auto">
-    <span class="text-lg font-bold">Top Product</span>
-    <table class="table rounded-lg">
-        <!-- head -->
+    <div class="flex justify-between">
+        <span class="text-lg font-bold">Top Product</span>
+        <div class="join">
+            <button class="btn bg-primary text-primary-content join-item btn-sm" @click="isTable = true">
+                <span class="material-symbols-outlined text-right ">
+                    table_chart
+                </span>
+            </button>
+            <button class="btn bg-primary text-primary-content join-item btn-sm" @click="isTable = false;">
+                <span class="material-symbols-outlined text-right">
+                    pie_chart
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <table v-show="isTable" class="table rounded-lg">
         <thead>
             <tr>
                 <th>
@@ -47,11 +61,61 @@
             </tr>
         </tbody>
     </table>
+    <div v-show="!isTable" id="piechart" class="h-full w-full"></div>
 </template>
 <script>
+import * as echarts from 'echarts';
+import { webSettings } from '@/stores/webSettings';
 export default {
+    name: 'tableComp',
+    setup() {
+        const setting = webSettings();
+        return { setting };
+    },
     data() {
         return {
+            isTable: false,
+            option: {
+                tooltip: {
+                    trigger: 'item'
+                },
+                series: [
+                    {
+                        name: 'Access From',
+                        type: 'pie',
+                        radius: '50%',
+                        data: [
+                            {
+                                "value": 150,
+                                "name": "Wireless Headphones"
+                            },
+                            {
+                                "value": 250,
+                                "name": "Gaming Mouse"
+                            },
+                            {
+                                "value": 75,
+                                "name": "Mechanical Keyboard"
+                            },
+                            {
+                                "value": 120,
+                                "name": "4K Monitor"
+                            },
+                            {
+                                "value": 300,
+                                "name": "USB-C Charging Cable"
+                            }
+                        ],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            },
             products: [
                 {
                     "product_name": "Wireless Headphones",
@@ -95,7 +159,37 @@ export default {
                 }
             ]
         }
-    }
+    },
+    methods: {
+        initChart() {
+            const chartDom = document.getElementById('piechart');
+            if (this.chart) {
+                this.onResize()
+            } else {
+                this.chart = echarts.init(chartDom);
+                this.chart.setOption(this.option);
+            }
+        },
+        onResize() {
+            if (this.chart) {
+                this.chart.resize();
+            }
+        },
+    },
+    watch: {
+        'setting.isGridStackReady': function (newVal) {
+            if (newVal) {
+                this.initChart();
+
+            }
+        }
+    },
+    mounted() {
+        if (this.setting.isGridStackReady) {
+            this.initChart();
+            this.setting.setGridStackReady(false);
+        }
+    },
 
 }
 </script>
