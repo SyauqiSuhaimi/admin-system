@@ -35,11 +35,11 @@ jobs:
     - name: List build output
       run: ls -R ./dist
 
-    - name: Upload artifact for deployment
-    uses: actions/upload-artifact@v4
-    with:
-      name: github-pages
-      path: ./dist
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: github-pages
+        path: ./dist
       
     # Step 6: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
