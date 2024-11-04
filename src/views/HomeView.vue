@@ -71,10 +71,8 @@ export default {
   methods: {
     handleResize({ width, height }, index) {
       const componentInstance = this.$refs[`refItem${index}`];
-      console.log("componentInstance", componentInstance[0]);
       if (componentInstance && componentInstance[0].initChart) {
         componentInstance[0].initChart();
-        console.log("initChart");
       } else {
         console.log("Component not found");
       }
